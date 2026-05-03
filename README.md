@@ -200,6 +200,7 @@ http://localhost:8000
 - [x] Initialisation du projet
 - [x] Configuration de la base de données
 - [x] Création des entités (Categorie, Meuble)
+- [x] Création des entités (User, Commande, LigneCommande)
 - [ ] CRUD
 - [ ] Interface utilisateur
 - [ ] Panier
