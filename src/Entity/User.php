@@ -63,7 +63,6 @@ class User
 
         return $this;
     }
-
     public function getRoles(): ?string
     {
         return $this->roles;
