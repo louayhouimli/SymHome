@@ -1,11 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block body %}
 
 <div class="d-flex justify-content-between align-items-center mb-5">
     <h2 class="fw-bold mb-0" style="letter-spacing: 1px;">Liste des meubles</h2>
-    <a class="btn text-white px-4" style="background-color: #5D4037;">
-        + Ajouter
+    <a href="{{ path('meuble_add') }}" class="btn text-white px-4" style="background-color: #5D4037;">
+        + Ajouter Meuble
     </a>
 </div>
 
