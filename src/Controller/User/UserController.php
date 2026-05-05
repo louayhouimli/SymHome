@@ -5,16 +5,18 @@ namespace App\Controller\User;
 use App\Entity\User;
 use App\Form\LoginFormType;
 use App\Form\RegisterFormType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController
 {
     #[Route('/login', name: 'user_login')]
-    public function login(Request $request): Response
+    public function login(Request $request,UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy([
             'email' => $email
@@ -23,7 +25,7 @@ final class UserController extends AbstractController
         return $this->render('auth/login.html.twig',['form'=>$form]);
     }
     #[Route('/register', name: 'user_register')]
-    public function register(Request $request,EntityManagerInterface $em): Response
+    public function register(Request $request,EntityManagerInterface $em,UserPasswordHasherInterface $hasher): Response
     {
         $user = new User();
         $form = $this->createForm(RegisterFormType::class,$user);
