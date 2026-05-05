@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="fw-bold mb-0" style="letter-spacing: 1px;">Liste des meubles</h2>
+    <a class="btn text-white px-4" style="background-color: #5D4037;">
+        + Ajouter
+    </a>
+</div>
+
+<div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body p-0">
+
+        <table class="table table-hover align-middle mb-0">
+            <thead style="background-color: #4E342E; color: white;">
+                <tr>
+                    <th>Nom</th>
+                    <th>Prix</th>
+                    <th>Catégorie</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for meuble in meubles %}
+                <tr>
+                    <td class="fw-semibold">{{ meuble.nom }}</td>
+                    <td class="text-success">{{ meuble.prix }} DT</td>
+                    <td>{{ meuble.categorie.libelle }}</td>
+                    <td>{{ meuble.stock }}</td>
+                    <td>
+                        <a 
+                           class="btn btn-sm text-white"
+                           style="background-color: #6D4C41;">
+                           Edit
+                        </a>
+
+                        <a
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Supprimer ?')">
+                           Delete
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        Aucun meuble disponible pour le moment
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
