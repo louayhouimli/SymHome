@@ -16,13 +16,39 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     #[Route('/login', name: 'user_login')]
-    public function login(Request $request,UserRepository $userRepository): Response
+    public function login(
+        Request $request,
+        UserRepository $userRepository,
+        UserPasswordHasherInterface $hasher
+    ): Response
     {
-        $user = $userRepository->findOneBy([
-            'email' => $email
+        $user = new User();
+        $form = $this->createForm(LoginFormType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $form->get('email')->getData();
+            $plainPassword = $form->get('password')->getData();
+            $foundUser = $userRepository->findOneBy([
+                'email' => $email
+            ]);
+            if (!$foundUser || !$hasher->isPasswordValid($foundUser, $plainPassword)) {
+                return $this->render('auth/login.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
+            if (in_array('ROLE_ADMIN', $foundUser->getRoles())) {
+                return $this->redirectToRoute('admin_meuble_list');
+            }else{
+                return $this->render('auth/login.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
+
+        }
+
+        return $this->render('auth/login.html.twig', [
+            'form' => $form->createView()
         ]);
-        $form = $this->createForm(LoginFormType::class,$user);
-        return $this->render('auth/login.html.twig',['form'=>$form]);
     }
     #[Route('/register', name: 'user_register')]
     public function register(Request $request,EntityManagerInterface $em,UserPasswordHasherInterface $hasher): Response
@@ -34,6 +60,7 @@ final class UserController extends AbstractController
             $plainPassword = $form->get('password')->getData();
             $hashedPassword = $hasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
+            $user->setRoles(['ROLE_CLIENT']);
             $em->persist($user);
             $em->flush();
         }
