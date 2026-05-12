@@ -31,16 +31,16 @@
                     <td>{{ meuble.categorie.libelle }}</td>
                     <td>{{ meuble.stock }}</td>
                     <td>
-                        <a 
-                           class="btn btn-sm text-white"
-                           style="background-color: #6D4C41;">
-                           Edit
+                       <a href="{{ path('meuble_edit', {'id': meuble.id}) }}"
+                          class="btn btn-sm text-white"
+                          style="background-color: #6D4C41;">
+                          Edit
                         </a>
 
-                        <a
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('Supprimer ?')">
-                           Delete
+                        <a href="{{ path('meuble_delete', {'id': meuble.id}) }}"
+                          class="btn btn-sm btn-outline-danger"
+                          onclick="return confirm('Supprimer ?')">
+                          Delete
                         </a>
                     </td>
                 </tr>
