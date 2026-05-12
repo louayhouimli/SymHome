@@ -1,0 +1,73 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-7">
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body p-5">
+
+                <div class="mb-5 text-center">
+
+                    <h2 class="fw-bold"
+                        style="color:#4E342E; letter-spacing:1px;">
+                        Modifier une catégorie
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Mettre à jour une catégorie existante
+                    </p>
+
+                </div>
+
+                {{ form_start(form) }}
+
+                <div class="mb-4">
+
+                    {{ form_label(form.libelle, null, {
+                        label_attr: {
+                            class: 'form-label fw-semibold mb-2'
+                        }
+                    }) }}
+
+                    {{ form_widget(form.libelle, {
+                        attr: {
+                            class: 'form-control rounded-3 p-3 border-0 shadow-sm'
+                        }
+                    }) }}
+
+                </div>
+
+                <div class="mb-4">
+
+                    {{ form_label(form.description, null, {
+                        label_attr: {
+                            class: 'form-label fw-semibold mb-2'
+                        }
+                    }) }}
+
+                    {{ form_widget(form.description, {
+                        attr: {
+                            class: 'form-control rounded-3 p-3 border-0 shadow-sm',
+                            rows: 5
+                        }
+                    }) }}
+
+                </div>
+
+                {{ form_row(form.Enregistrer) }}
+
+                {{ form_end(form) }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
