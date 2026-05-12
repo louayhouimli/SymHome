@@ -6,8 +6,8 @@ use App\Entity\Meuble;
 use App\Form\MeubleType;
 use App\Repository\MeubleRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -29,9 +29,25 @@ final class MeubleController extends AbstractController
         $meuble = new Meuble();
 
         $form = $this->createForm(MeubleType::class, $meuble);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads',
+                    $newFilename
+                );
+
+                $meuble->setImage($newFilename);
+            }
+
             $em->persist($meuble);
             $em->flush();
 
