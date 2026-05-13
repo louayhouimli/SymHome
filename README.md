@@ -88,6 +88,7 @@ public/
 - id
 - date
 - total
+- etat
 - user (relation)
 
 ### 🔹 LigneCommande
@@ -103,6 +104,7 @@ public/
 - id
 - email
 - password
+- isBlocked
 - roles
 
 ---
