@@ -1,0 +1,116 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Liste des commandes{% endblock %}
+
+{% block body %}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+
+    <h2 class="fw-bold mb-0" style="letter-spacing:1px;">
+        Suivi des commandes
+    </h2>
+
+
+</div>
+
+<div class="card shadow-sm border-0 rounded-4">
+
+    <div class="card-body p-0">
+
+        <table class="table table-hover align-middle mb-0">
+
+            <thead style="background-color:#4E342E; color:white;">
+
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Total</th>
+                    <th>Etat</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for commande in commandes %}
+
+                <tr>
+
+                    <td class="fw-semibold">
+                        #{{ commande.id }}
+                    </td>
+
+                    <td>
+                        {{ commande.date ? commande.date|date('d/m/Y') : '' }}
+                    </td>
+
+                    <td>
+                        {{ commande.user.email }}
+                    </td>
+
+                    <td class="text-success fw-semibold">
+                        {{ commande.total }} DT
+                    </td>
+
+                    <td>
+
+                        {% if commande.etat == 'en_attente' %}
+
+                            <span class="badge bg-warning text-dark px-3 py-2">
+                                En attente
+                            </span>
+
+                        {% elseif commande.etat == 'en_cours' %}
+
+                            <span class="badge bg-primary px-3 py-2">
+                                En cours
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-success px-3 py-2">
+                                Complétée
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{{ path('app_commande_edit', {'id': commande.id}) }}"
+                           class="btn btn-sm text-white"
+                           style="background-color:#6D4C41;">
+                            Modifier
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="6"
+                        class="text-center py-5 text-muted">
+
+                        Aucune commande disponible
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

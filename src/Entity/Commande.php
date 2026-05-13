@@ -31,6 +31,9 @@ class Commande
     #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'commande')]
     private Collection $ligneCommandes;
 
+    #[ORM\Column(length: 50)]
+    private ?string $etat = null;
+
     public function __construct()
     {
         $this->ligneCommandes = new ArrayCollection();
@@ -103,6 +106,18 @@ class Commande
                 $ligneCommande->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(string $etat): static
+    {
+        $this->etat = $etat;
 
         return $this;
     }
