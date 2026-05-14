@@ -5,119 +5,66 @@
 {% block body %}
 
 <style>
-
-    /* HERO */
-    
-
-    /* SECTION TITLE */
-    .section-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #4E342E;
-        margin-bottom: 30px;
-        text-align:center;
-    }
-    .product-card {
-        background: white;
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        transition: 0.25s ease;
-        width:400px;
+    .product-card-custom {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .product-card:hover {
+    .product-card-custom:hover {
         transform: translateY(-8px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
     }
 
-    .product-card img {
-        width: 100%;
+    .product-card-custom img {
         height: 240px;
         object-fit: cover;
     }
 
-    .product-body {
-        padding: 20px;
-    }
-
-    .product-body h5 {
-        font-size: 22px;
-        margin-bottom: 10px;
-        color: #3E2723;
-    }
-
-    .price {
-        color: #6D4C41;
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .description {
-        color: #777;
-        min-height: 60px;
-    }
-
     .btn-buy {
-        width: 100%;
-        margin-top: 15px;
-        border: none;
-        padding: 12px;
-        border-radius: 10px;
         background: linear-gradient(90deg, #5D4037, #795548);
-        color: white;
-        font-weight: bold;
-        transition: 0.2s;
+        border: none;
+        transition: all 0.2s;
     }
 
     .btn-buy:hover {
         transform: translateY(-2px);
         background: linear-gradient(90deg, #4E342E, #6D4C41);
+        color: white;
     }
-    .products-container{
-        display:flex;
-        justify-content:center;
-        gap:50px;
-        flex-wrap: wrap;
-    }
-
 </style>
 
-
-
 <!-- TITLE -->
-<h2 class="section-title">
+<h2 class="h2 fw-bold text-center mb-5" style="color: #4E342E;">
     Nos Meubles
 </h2>
 
 <!-- PRODUCTS -->
-<div class="products-container">
+<div class="row g-4 justify-content-center">
 
     {% for meuble in meubles %}
 
-        <div class="product-card">
+        <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+            <div class="card product-card-custom" style="width: 100%; max-width: 400px;">
 
-            <img src="{{ meuble.image }}" alt="meuble">
+                <img src="{{ meuble.image }}" class="card-img-top" alt="meuble">
 
-            <div class="product-body">
+                <div class="card-body">
 
-                <h5>{{ meuble.nom }}</h5>
+                    <h5 class="card-title" style="color: #3E2723;">{{ meuble.nom }}</h5>
 
-                <div class="price">
-                    {{ meuble.prix }} DT
+                    <div class="h5" style="color: #6D4C41;">
+                        {{ meuble.prix }} DT
+                    </div>
+
+                    <p class="card-text text-muted" style="min-height: 60px;">
+                        {{ meuble.description }}
+                    </p>
+
+                    <button class="btn btn-buy w-100 text-white">
+                        Ajouter au panier
+                    </button>
+
                 </div>
 
-                <p class="description">
-                    {{ meuble.description }}
-                </p>
-
-                <button class="btn-buy">
-                    Ajouter au panier
-                </button>
-
             </div>
-
         </div>
 
     {% else %}
