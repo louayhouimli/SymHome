@@ -4,77 +4,65 @@
 
 {% block body %}
 
-<style>
-    .product-card-custom {
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
+<div class="hero-section">
+        <div class="hero-content">
+            <h1 style="color : white;">SymHome</h1>
+            <p>Meubles modernes & décoration élégante</p>
+        </div>
+    </div>
 
-    .product-card-custom:hover {
-        transform: translateY(-8px);
-    }
-
-    .product-card-custom img {
-        height: 240px;
-        object-fit: cover;
-    }
-
-    .btn-buy {
-        background: linear-gradient(90deg, #5D4037, #795548);
-        border: none;
-        transition: all 0.2s;
-    }
-
-    .btn-buy:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(90deg, #4E342E, #6D4C41);
-        color: white;
-    }
-</style>
-
-<!-- TITLE -->
 <h2 class="h2 fw-bold text-center mb-5" style="color: #4E342E;">
     Nos Meubles
 </h2>
 
-<!-- PRODUCTS -->
+
+
 <div class="row g-4 justify-content-center">
 
     {% for meuble in meubles %}
-
+        
         <div class="col-md-6 col-lg-4 d-flex justify-content-center">
-            <div class="card product-card-custom" style="width: 100%; max-width: 400px;">
-
-                <img src="{{ meuble.image }}" class="card-img-top" alt="meuble">
-
-                <div class="card-body">
-
-                    <h5 class="card-title" style="color: #3E2723;">{{ meuble.nom }}</h5>
-
-                    <div class="h5" style="color: #6D4C41;">
-                        {{ meuble.prix }} DT
+                <div class="card card-product">
+            <a 
+                href="{{ path('client_meuble_details', {'id': meuble.id}) }}"
+                class="text-decoration-none text-dark w-100"
+            >
+                    <img src="/uploads/{{ meuble.image }}" class="card-img-top" alt="{{ meuble.nom }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ meuble.nom }}</h5>
+                        <div class="card-price">{{ meuble.prix }} DT</div>
+                        <p class="card-text text-truncate">{{ meuble.description }}</p>
+                        <div class="mb-3">
+                            {% if meuble.stock > 0 %}
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                                    En stock ({{ meuble.stock }})
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger fs-6 px-3 py-2">
+                                    Rupture de stock
+                                </span>
+                            {% endif %}
+                        </div>
+            </a>
+                        <button
+                            class="btn btn-buy w-100 text-white"
+                            onclick="addToCart({{ meuble.id }}, '{{ meuble.nom|e('js') }}', {{ meuble.prix }}, '{{ meuble.image|e('js') }}')"
+                            {% if meuble.stock == 0 %}disabled{% endif %}
+                        >
+                            Ajouter au panier
+                        </button>
                     </div>
-
-                    <p class="card-text text-muted" style="min-height: 60px;">
-                        {{ meuble.description }}
-                    </p>
-
-                    <button class="btn btn-buy w-100 text-white">
-                        Ajouter au panier
-                    </button>
-
                 </div>
-
-            </div>
         </div>
 
     {% else %}
-
         <div class="alert alert-warning">
-            Aucun meuble disponible
+            Aucun meuble trouvé
         </div>
-
     {% endfor %}
 
 </div>
 
 {% endblock %}
+
+

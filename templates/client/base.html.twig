@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <title>{% block title %}SymHome - Meubles & Décoration{% endblock %}</title>
+
     <style>
         .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85') center/cover no-repeat;
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                        url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85')
+                        center/cover no-repeat;
             height: 420px;
             display: flex;
             align-items: center;
@@ -36,72 +42,143 @@
             min-width: 400px;
         }
 
-        .search-navbar .form-control {
-            background-color: rgba(255, 255, 255, 0.9);
+        .card-product {
             border: none;
-            padding: 0.5rem 1rem;
-            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            height: 100%;
         }
 
-        .search-navbar .form-control::placeholder {
-            color: #999;
+        .card-product:hover {
+            transform: translateY(-8px);
         }
 
-        .search-navbar .btn-outline-light {
-            border-color: rgba(255, 255, 255, 0.5);
-            padding: 0.5rem 1rem;
-            font-size: 0.95rem;
+        .card-product img {
+            height: 240px;
+            object-fit: cover;
+        }
+
+        .btn-buy {
+            background: linear-gradient(90deg, #5D4037, #795548);
+            border: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(90deg, #4E342E, #6D4C41);
+            color: white;
         }
     </style>
 </head>
+
 <body class="bg-light">
 
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #5D4037;">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ path('app_client') }}">SymHome</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+
+        <a class="navbar-brand fw-bold" href="{{ path('app_client') }}">
+            SymHome
+        </a>
+
         <form method="GET" class="search-navbar ms-auto me-3">
-            <div class="input-group">
-                <input 
-                    type="text"
-                    placeholder="Rechercher..."
-                    id="recherche"
-                    name="recherche"
-                    class="form-control"
-                    oninput="this.form.submit()"
-                >
-            </div>
+            <input
+                type="text"
+                name="recherche"
+                class="form-control"
+                placeholder="Rechercher..."
+                oninput="this.form.submit()"
+            >
         </form>
-            <div class="navbar-nav">
-                <a class="nav-link" href="{{ path('app_client') }}">Accueil</a>
-                <a class="nav-link" href="">Produits</a>
-                <a class="nav-link" href="">Catégories</a>
-            </div>
+
+        <div class="navbar-nav">
+            <a class="nav-link text-white" href="{{ path('app_client') }}">Accueil</a>
+            <a class="nav-link text-white" href="">Catégories</a>
         </div>
+
         <div class="d-flex gap-2 ms-3">
-            <a href="" class="btn btn-outline-light btn-sm">Panier</a>
-            <a href="{{ path('user_login') }}" class="btn btn-outline-light btn-sm">Déconnexion</a>
+
+            <a href="{{ path('app_panier') }}"
+               class="btn btn-outline-light btn-sm position-relative">
+
+                <i class="bi bi-cart"></i> Panier
+
+                <span id="cart-count"
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    0
+                </span>
+
+            </a>
+
+            <a href="{{ path('user_login') }}"
+               class="btn btn-outline-light btn-sm">
+                Déconnexion
+            </a>
+
         </div>
+
     </div>
 </nav>
 
 <div class="container py-5">
-    
 
-    <!-- HERO -->
-    <div class="hero-section mb-5">
-        <div class="hero-content">
-            <h1 style="color : white">SymHome</h1>
-            <p>Meubles modernes & décoration élégante</p>
-        </div>
-    </div>
 
     {% block body %}{% endblock %}
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+function getCart()
+{
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+function saveCart(cart)
+{
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function addToCart(id, nom, prix, image)
+{
+    let cart = getCart();
+
+    let item = cart.find(p => p.id == id);
+
+    if (item) {
+        item.quantite += 1;
+    } else {
+        cart.push({
+            id: id,
+            nom: nom,
+            prix: prix,
+            image: image,
+            quantite: 1
+        });
+    }
+
+    saveCart(cart);
+    updateCartCount();
+}
+
+function updateCartCount()
+{
+    let cart = getCart();
+
+    let count = cart.reduce((sum, item) => sum + item.quantite, 0);
+
+    let el = document.getElementById("cart-count");
+
+    if (el) el.innerText = count;
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCount);
+
+</script>
+
 </body>
 </html>

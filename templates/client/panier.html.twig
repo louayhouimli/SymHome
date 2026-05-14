@@ -1,0 +1,148 @@
+{% extends 'client/base.html.twig' %}
+
+{% block title %}Panier{% endblock %}
+
+{% block body %}
+
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-4">Mon Panier</h2>
+
+    <div class="row g-3" id="cart-items"></div>
+
+    <div class="card mt-4 border-0 shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Total</h4>
+            <h4 class="text-success mb-0"><span id="cart-total">0</span> DT</h4>
+        </div>
+        <div class="card-footer bg-white border-0">
+            <button class="btn btn-success w-100" onclick="checkout()">
+                Valider la commande
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+function getCart()
+{
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+function saveCart(cart)
+{
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function renderCart()
+{
+    let cart = getCart();
+    let container = document.getElementById("cart-items");
+    let total = 0;
+
+    container.innerHTML = "";
+
+    if (cart.length === 0)
+    {
+        container.innerHTML = `<div class="alert alert-warning">Panier vide</div>`;
+        document.getElementById("cart-total").innerText = 0;
+        return;
+    }
+
+    cart.forEach(item => {
+
+        total += item.prix * item.quantite;
+
+        container.innerHTML += `
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3">
+
+                    <img src="/uploads/${item.image}"
+                         width="90"
+                         height="90"
+                         style="object-fit:cover;border-radius:12px">
+
+                    <div class="flex-grow-1">
+
+                        <h5 class="mb-1">${item.nom}</h5>
+
+                        <div class="text-muted">${item.prix} DT</div>
+
+                        <div class="d-flex align-items-center gap-2 mt-2">
+
+                            <button class="btn btn-sm btn-danger" onclick="decrease(${item.id})">-</button>
+
+                            <span class="fw-bold">${item.quantite}</span>
+
+                            <button class="btn btn-sm btn-success" onclick="increase(${item.id})">+</button>
+
+                            <button class="btn btn-sm btn-outline-danger ms-3" onclick="removeItem(${item.id})">
+                                Supprimer
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="fw-bold text-success">
+                        ${(item.prix * item.quantite).toFixed(2)} DT
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    document.getElementById("cart-total").innerText = total.toFixed(2);
+}
+
+function increase(id)
+{
+    let cart = getCart();
+    let item = cart.find(p => p.id === id);
+    if (item) item.quantite++;
+    saveCart(cart);
+    renderCart();
+}
+
+function decrease(id)
+{
+    let cart = getCart();
+    let item = cart.find(p => p.id === id);
+    if (!item) return;
+
+    item.quantite--;
+
+    if (item.quantite <= 0)
+    {
+        cart = cart.filter(p => p.id !== id);
+    }
+
+    saveCart(cart);
+    renderCart();
+}
+
+function removeItem(id)
+{
+    let cart = getCart();
+    cart = cart.filter(p => p.id !== id);
+    saveCart(cart);
+    renderCart();
+}
+
+function checkout()
+{
+    localStorage.removeItem('cart');
+    renderCart();
+    alert("Commande validée");
+}
+
+document.addEventListener("DOMContentLoaded", renderCart);
+
+</script>
+
+{% endblock %}

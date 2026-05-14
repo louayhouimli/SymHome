@@ -2,6 +2,7 @@
 
 namespace App\Controller\Client;
 
+use App\Entity\Meuble;
 use App\Repository\MeubleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,5 +37,17 @@ final class ClientController extends AbstractController
         return $this->render('client/index.html.twig', [
             'meubles' => $meubles,
         ]);
+    }
+    #[Route('/client/meuble/{id}', name: 'client_meuble_details')]
+    public function details(Meuble $meuble): Response
+    {
+        return $this->render('client/details.html.twig', [
+            'meuble' => $meuble
+        ]);
+    }
+    #[Route('/panier', name: 'app_panier')]
+    public function panier(): Response
+    {
+        return $this->render('client/panier.html.twig');
     }
 }
