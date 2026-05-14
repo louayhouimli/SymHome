@@ -1,0 +1,192 @@
+<head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+<style>
+
+    body {
+        margin: 0;
+        background: #f5f5f5;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    .hero-section {
+        height: 420px;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        background:
+            linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+            url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85')
+            center/cover no-repeat;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 50px;
+    }
+
+    .hero-content {
+        text-align: center;
+        color: white;
+    }
+
+    .hero-content h1 {
+        font-size: 58px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .hero-content p {
+        font-size: 20px;
+        opacity: 0.9;
+    }
+
+    /* NAVBAR */
+    .navbar-custom {
+        background: white;
+        height: 80px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:50px;
+        padding: 0 40px;
+    }
+
+    .search-btn:hover {
+        background: #3E2723;
+    }
+
+    /* LINKS */
+    .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content:space-between;
+        width: 100%;
+    }
+    .container{
+    width:100%;
+}
+
+    .nav-links a {
+        text-decoration: none;
+        color: #555;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+        color: #4E342E;
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    /* BUTTONS */
+    .cart-btn {
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background: #4E342E;
+        color: white !important;
+        padding: 10px 18px;
+        border-radius: 30px;
+    }
+
+    .cart-btn:hover {
+        background: #3E2723;
+    }
+
+    .logout-btn {
+        border: 1px solid #ddd;
+        padding: 10px 18px;
+        border-radius: 30px;
+    }
+
+    .logout-btn:hover {
+        background: #f3f3f3;
+    }
+    .a{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:50px
+    }
+    .b{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:20px
+    }
+    @media (max-width: 992px) {
+
+        .navbar-custom {
+            height: auto;
+            padding: 20px 0;
+        }
+
+        .navbar-content {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .search-wrapper {
+            width: 100%;
+        }
+
+        .nav-links {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+</style>
+
+<nav class="navbar-custom">
+    <div class="container">
+            <div class="nav-links">
+                <div class="a">
+                    <a href="{{ path('app_client') }}">
+                        Accueil
+                    </a>
+
+                    <a href="">
+                        Produits
+                    </a>
+
+                    <a href="">
+                        Catégories
+                    </a>
+                </div>
+                <div class="b">
+                    <a href="" class="cart-btn">
+                        <span class="material-symbols-outlined">
+                            shopping_cart
+                        </span> Panier
+                    </a>
+
+                    <a href="{{ path('user_login') }}" class="logout-btn">
+                        Déconnexion
+                    </a>
+                </div>
+
+            </div>
+    </div>
+</nav>
+<!-- HERO -->
+<div class="hero-section">
+
+    <div class="hero-content">
+        <h1>SymHome</h1>
+        <p>Meubles modernes & décoration élégante</p>
+    </div>
+
+</div>
+<div class="container_main">
+    {% block body %}{% endblock %}
+</div>
+
+</body>

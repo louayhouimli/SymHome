@@ -39,9 +39,7 @@ final class UserController extends AbstractController
             if (in_array('ROLE_ADMIN', $foundUser->getRoles())) {
                 return $this->redirectToRoute('admin_meuble_list');
             }else{
-                return $this->render('auth/login.html.twig', [
-                    'form' => $form->createView()
-                ]);
+                return $this->redirectToRoute('app_client');
             }
 
         }
