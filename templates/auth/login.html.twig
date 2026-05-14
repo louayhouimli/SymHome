@@ -6,9 +6,21 @@
 
 <h1 class="text-center mb-4">Welcome</h1>
 
+{% if error is defined %}
+
+    <div class="alert alert-danger rounded-3">
+        {{ error }}
+    </div>
+
+{% endif %}
+
 {{ form(form) }}
+
 <div style="text-align: center; margin-top: 10px;">
-    <a href="{{ path('user_register') }}" style="text-decoration: none;">Pas de compte ?</a>
+    <a href="{{ path('user_register') }}"
+       style="text-decoration: none;">
+       Pas de compte ?
+    </a>
 </div>
 
 {% endblock %}

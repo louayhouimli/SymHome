@@ -4,10 +4,27 @@
 
 {% block auth_content %}
 
-<h1 class="text-center mb-4">Welcome</h1>
+<h1 class="text-center mb-4">Create Account</h1>
+
+{% if error is defined %}
+
+    <div class="alert alert-danger rounded-3">
+        {{ error }}
+    </div>
+
+{% endif %}
 
 {{ form(form) }}
+
 <div style="text-align: center; margin-top: 10px;">
-    <a href="{{ path('user_login') }}" style="text-decoration: none;">Vous avez deja un compte ?</a>
+
+    <a href="{{ path('user_login') }}"
+       style="text-decoration: none;">
+
+       Déjà un compte ?
+
+    </a>
+
 </div>
+
 {% endblock %}

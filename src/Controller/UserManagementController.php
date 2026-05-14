@@ -20,8 +20,21 @@ final class UserManagementController extends AbstractController
         ]);
     }
 
-    #[Route('/toggle/{id}', name: 'admin_user_toggle')]
-    public function toggle(
+    #[Route('/activate/{id}', name: 'admin_user_activate')]
+    public function activate(
+        User $user,
+        EntityManagerInterface $em
+    ): Response {
+
+        $user->setIsActive(!$user->isActive());
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_user_list');
+    }
+
+    #[Route('/block/{id}', name: 'admin_user_block')]
+    public function block(
         User $user,
         EntityManagerInterface $em
     ): Response {

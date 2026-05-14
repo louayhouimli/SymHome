@@ -36,9 +36,28 @@ final class UserController extends AbstractController
                     'form' => $form->createView()
                 ]);
             }
+            if (!$foundUser->isActive()) {
+
+                return $this->render('auth/login.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => 'Votre compte est en attente de validation.'
+                ]);
+            }
+
+            if ($foundUser->isBlocked()) {
+
+                return $this->render('auth/login.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => 'Votre compte a été bloqué.'
+                ]);
+            }
+
             if (in_array('ROLE_ADMIN', $foundUser->getRoles())) {
+
                 return $this->redirectToRoute('admin_meuble_list');
-            }else{
+
+            } else {
+
                 return $this->redirectToRoute('app_client');
             }
 
@@ -49,20 +68,54 @@ final class UserController extends AbstractController
         ]);
     }
     #[Route('/register', name: 'user_register')]
-    public function register(Request $request,EntityManagerInterface $em,UserPasswordHasherInterface $hasher): Response
-    {
-        $user = new User();
-        $form = $this->createForm(RegisterFormType::class,$user);
-        $form->handleRequest($request);         
-        if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('password')->getData();
-            $hashedPassword = $hasher->hashPassword($user, $plainPassword);
-            $user->setPassword($hashedPassword);
-            $user->setRoles(['ROLE_CLIENT']);
-            $em->persist($user);
-            $em->flush();
-        }
+    public function register(
+    Request $request,
+    EntityManagerInterface $em,
+    UserPasswordHasherInterface $hasher,
+    UserRepository $userRepository
+  ): Response
+  {
+      $user = new User();
 
-        return $this->render('auth/register.html.twig',['form'=>$form]);
-    }
+      $form = $this->createForm(RegisterFormType::class, $user);
+
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()) {
+
+          $existingUser = $userRepository->findOneBy([
+              'email' => $user->getEmail()
+          ]);
+
+          if ($existingUser) {
+
+              return $this->render('auth/register.html.twig', [
+                  'form' => $form->createView(),
+                  'error' => 'Cet email existe déjà.'
+              ]);
+          }
+
+          $plainPassword = $form->get('password')->getData();
+
+          $hashedPassword = $hasher->hashPassword($user, $plainPassword);
+
+          $user->setPassword($hashedPassword);
+
+          $user->setRoles(['ROLE_CLIENT']);
+
+          $user->setIsActive(false);
+
+          $user->setIsBlocked(false);
+
+          $em->persist($user);
+
+          $em->flush();
+
+          return $this->redirectToRoute('user_login');
+      }
+
+      return $this->render('auth/register.html.twig', [
+          'form' => $form->createView()
+      ]);
+  }
 }

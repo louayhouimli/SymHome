@@ -22,7 +22,8 @@
                     <th>ID</th>
                     <th>Email</th>
                     <th>Roles</th>
-                    <th>Statut</th>
+                    <th>Validation</th>
+                    <th>Blocage</th>
                     <th>Actions</th>
                 </tr>
 
@@ -41,10 +42,30 @@
                     <td>
 
                         {% for role in user.roles %}
+
                             <span class="badge bg-dark">
                                 {{ role }}
                             </span>
+
                         {% endfor %}
+
+                    </td>
+
+                    <td>
+
+                        {% if user.isActive %}
+
+                            <span class="badge bg-success">
+                                Actif
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-warning text-dark">
+                                En attente
+                            </span>
+
+                        {% endif %}
 
                     </td>
 
@@ -58,19 +79,30 @@
 
                         {% else %}
 
-                            <span class="badge bg-success">
-                                Actif
+                            <span class="badge bg-secondary">
+                                Non bloqué
                             </span>
 
                         {% endif %}
 
                     </td>
 
-                    <td>
+                    <td class="d-flex gap-2">
 
-                        <a href="{{ path('admin_user_toggle', {'id': user.id}) }}"
+                        <a href="{{ path('admin_user_activate', {'id': user.id}) }}"
                            class="btn btn-sm text-white"
                            style="background-color:#6D4C41;">
+
+                            {% if user.isActive %}
+                                Désactiver
+                            {% else %}
+                                Activer
+                            {% endif %}
+
+                        </a>
+
+                        <a href="{{ path('admin_user_block', {'id': user.id}) }}"
+                           class="btn btn-sm btn-outline-danger">
 
                             {% if user.isBlocked %}
                                 Débloquer
@@ -88,7 +120,7 @@
 
                 <tr>
 
-                    <td colspan="5"
+                    <td colspan="6"
                         class="text-center py-5 text-muted">
 
                         Aucun utilisateur trouvé
