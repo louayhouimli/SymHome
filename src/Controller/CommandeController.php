@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Commande;
+use App\Entity\LigneCommande;
+use App\Entity\Meuble;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/admin/commande')]
+
 final class CommandeController extends AbstractController
 {
-    #[Route(name: 'app_commande_index', methods: ['GET'])]
+    #[Route('/admin/commande',name: 'app_commande_index', methods: ['GET'])]
     public function index(CommandeRepository $commandeRepository): Response
     {
         return $this->render('admin/commande/index.html.twig', [
@@ -22,27 +24,43 @@ final class CommandeController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_commande_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/client/commande/create', name: 'client_commande_checkout', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $data = json_decode($request->getContent(), true);
+
         $commande = new Commande();
-        $form = $this->createForm(CommandeType::class, $commande);
-        $form->handleRequest($request);
+        $commande->setDate(new \DateTime());
+        $commande->setEtat('pending');
+        $commande->setUser($this->getUser());
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($commande);
-            $entityManager->flush();
+        $total = 0;
 
-            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+        $entityManager->persist($commande);
+
+        foreach ($data as $item) {
+
+            $meuble = $entityManager->getRepository(Meuble::class)->find($item['id']);
+
+            $ligne = new LigneCommande();
+            $ligne->setCommande($commande);
+            $ligne->setMeuble($meuble);
+            $ligne->setQuantite($item['quantite']);
+            $ligne->setPrix($meuble->getPrix());
+
+            $total += $meuble->getPrix() * $item['quantite'];
+
+            $entityManager->persist($ligne);
         }
 
-        return $this->render('admin/commande/new.html.twig', [
-            'commande' => $commande,
-            'form' => $form,
-        ]);
+        $commande->setTotal($total);
+
+        $entityManager->flush();
+
+        return $this->json(['status' => 'ok']);
     }
 
-    #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
+    #[Route('/admin/commande/{id}', name: 'app_commande_show', methods: ['GET'])]
     public function show(Commande $commande): Response
     {
         return $this->render('admin/commande/show.html.twig', [
@@ -50,7 +68,7 @@ final class CommandeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
+    #[Route('/admin/commande/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CommandeType::class, $commande);
@@ -68,7 +86,7 @@ final class CommandeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_commande_delete', methods: ['POST'])]
+    #[Route('/admin/commande/{id}', name: 'app_commande_delete', methods: ['POST'])]
     public function delete(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$commande->getId(), $request->getPayload()->getString('_token'))) {

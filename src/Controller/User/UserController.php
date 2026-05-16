@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class UserController extends AbstractController
 {
@@ -19,7 +21,8 @@ final class UserController extends AbstractController
     public function login(
         Request $request,
         UserRepository $userRepository,
-        UserPasswordHasherInterface $hasher
+        UserPasswordHasherInterface $hasher,
+        TokenStorageInterface $tokenStorage
     ): Response
     {
         $user = new User();
@@ -51,7 +54,14 @@ final class UserController extends AbstractController
                     'error' => 'Votre compte a été bloqué.'
                 ]);
             }
+            $token = new UsernamePasswordToken(
+                $foundUser,
+                'main',
+                $foundUser->getRoles()
+            );
 
+            $tokenStorage->setToken($token);
+            $request->getSession()->set('_security_main', serialize($token));
             if (in_array('ROLE_ADMIN', $foundUser->getRoles())) {
 
                 return $this->redirectToRoute('admin_meuble_list');

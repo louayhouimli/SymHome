@@ -136,9 +136,22 @@ function removeItem(id)
 
 function checkout()
 {
-    localStorage.removeItem('cart');
-    renderCart();
-    alert("Commande validée");
+    let cart = getCart();
+
+    fetch("/client/commande/create", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(cart)
+    })
+    .then(res => res.json())
+    .then(data => {
+        localStorage.removeItem('cart');
+        renderCart();
+        alert("Commande créée !");
+    });
 }
 
 document.addEventListener("DOMContentLoaded", renderCart);
