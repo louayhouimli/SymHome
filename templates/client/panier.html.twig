@@ -71,19 +71,32 @@ function renderCart()
 
                         <div class="text-muted">${item.prix} DT</div>
 
-                        <div class="d-flex align-items-center gap-2 mt-2">
-
-                            <button class="btn btn-sm btn-danger" onclick="decrease(${item.id})">-</button>
-
-                            <span class="fw-bold">${item.quantite}</span>
-
-                            <button class="btn btn-sm btn-success" onclick="increase(${item.id})">+</button>
-
-                            <button class="btn btn-sm btn-outline-danger ms-3" onclick="removeItem(${item.id})">
-                                Supprimer
+                        <div class="d-flex align-items-center gap-3 mt-2">
+    
+                        <div class="input-group border border-dark  overflow-hidden" style="width: max-content;">
+                            
+                            <button class="btn btn-link text-dark text-decoration-none px-3 py-2 border-0" 
+                                    onclick="decrease(${item.id})">
+                                −
                             </button>
-
+                            
+                            <span class="d-flex align-items-center justify-content-center text-primary fw-medium px-3 border-start border-end border-dark" 
+                                style="min-width: 40px; background: transparent;">
+                                ${item.quantite}
+                            </span>
+                            
+                            <button class="btn btn-link text-dark text-decoration-none px-3 py-1 border-0" 
+                                    onclick="increase(${item.id})">
+                                +
+                            </button>
+                            
                         </div>
+
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${item.id})">
+                            Supprimer
+                        </button>
+                        
+                    </div>
 
                     </div>
 

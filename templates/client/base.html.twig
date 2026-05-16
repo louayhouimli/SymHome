@@ -84,7 +84,8 @@
             SymHome
         </a>
 
-        <form method="GET" class="search-navbar ms-auto me-3">
+        <form method="GET" id="filterForm" class="d-flex gap-2">
+
             <input
                 type="text"
                 name="recherche"
@@ -92,12 +93,22 @@
                 placeholder="Rechercher..."
                 oninput="this.form.submit()"
             >
-        </form>
 
-        <div class="navbar-nav">
-            <a class="nav-link text-white" href="{{ path('app_client') }}">Accueil</a>
-            <a class="nav-link text-white" href="">Catégories</a>
-        </div>
+            <select name="categorie"
+                    class="form-select"
+                    onchange="this.form.submit()">
+
+                <option value="">Toutes catégories</option>
+
+                {% for c in categories %}
+                    <option value="{{ c.id }}">
+                        {{ c.libelle }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+        </form>
 
         <div class="d-flex gap-2 ms-3">
 
