@@ -205,7 +205,7 @@ http://localhost:8000
 - [x] Création des entités (User, Commande, LigneCommande)
 - [ ] CRUD
 - [ ] Interface utilisateur
-- [ ] Panier
-- [ ] Commandes
-- [ ] Authentification
+- [x] Panier
+- [x] Commandes
+- [x] Authentification
 - [ ] Paiement
